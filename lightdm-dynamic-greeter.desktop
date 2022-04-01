@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=LightDM Dynamic Greeter
+Comment=QT5-based LightDM greeter with dynamic backgrounds that changes with time
+Exec=lightdm-dynamic-greeter
+Type=Application
