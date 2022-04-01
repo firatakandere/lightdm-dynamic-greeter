@@ -56,7 +56,7 @@ void MainWindow::setBackground(const QImage* backgroundImage)
 	}
 	else
 	{
-		QBrush brush(backgroundImage->scaled(rect.width(), rect.height()));
+		QBrush brush(backgroundImage->scaled(rect.width(), rect.height(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
 		palette.setBrush(backgroundRole(), brush);
 	}
 

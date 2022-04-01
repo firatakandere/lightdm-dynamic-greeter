@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
 	clickablelabel.h
 	backgroundmanager.cpp
 	backgroundmanager.h
+	wallpaperresize.h
 )
 
 add_executable(lightdm-dynamic-greeter ${PROJECT_SOURCES})

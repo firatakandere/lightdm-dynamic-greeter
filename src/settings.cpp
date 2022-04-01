@@ -26,3 +26,13 @@ QString Settings::getChosenWallpapersPath() const
 	QString chosenWallpaper = settings->value("greeter/wallpaper", QString("lakeside")).toString();
 	return QDir::cleanPath(getCollectionDirectory() + QDir::separator() + chosenWallpaper);
 }
+
+Settings::ResizeMode Settings::getResizeMode() const
+{
+	if (!settings->contains("greeter/resize_mode"))
+	{
+		qWarning() << "resize_mode setting is missing in configuration file, fallback to default value";
+	}
+
+	return settings->value("greeter/resize_mode", QVariant::fromValue(Settings::ResizeMode::SCALE)).value<Settings::ResizeMode>();
+}

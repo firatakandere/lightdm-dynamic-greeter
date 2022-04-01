@@ -21,7 +21,8 @@ AuthForm::AuthForm(QWidget *parent) :
 
 	ui->setupUi(this);
 
-	auto test = m_Greeter.defaultSessionHint();
+	ui->usernameEdit->setPlaceholderText("Username");
+	ui->passwordEdit->setPlaceholderText("Password");
 
 	ui->usernameEdit->hide();
 	ui->passwordEdit->setEchoMode(QLineEdit::Password);
