@@ -12,7 +12,8 @@ AuthForm::AuthForm(QWidget *parent) :
 	ui(new Ui::AuthForm),
 	m_Greeter(this),
 	m_PowerInterface(this),
-	m_SessionsModel(this)
+	m_SessionsModel(this),
+	m_Cache(this)
 {
 	if (!m_Greeter.connectSync())
 	{
@@ -40,23 +41,30 @@ AuthForm::AuthForm(QWidget *parent) :
 	palette.setColor(QPalette::Window, color);
 	setPalette(palette);
 
-	if (m_Greeter.hideUsersHint() != true)
+	QStringList users;
+	QLightDM::UsersModel usersModel;
+	for(int i = 0; i < usersModel.rowCount(QModelIndex()); ++i)
 	{
-		QStringList users;
-		QLightDM::UsersModel usersModel;
-		for(int i = 0; i < usersModel.rowCount(QModelIndex()); ++i)
-		{
-			users << usersModel.data(usersModel.index(i, 0), QLightDM::UsersModel::NameRole).toString();
-		}
+		users << usersModel.data(usersModel.index(i, 0), QLightDM::UsersModel::NameRole).toString();
+	}
+
+	if (!m_Greeter.hideUsersHint())
+	{
 		ui->usernameEdit->setCompleter(new QCompleter(users));
 		ui->usernameEdit->completer()->setCompletionMode(QCompleter::InlineCompletion);
 	}
 
 	// @todo remember user
 
-	QString user = m_Greeter.selectUserHint();
+	QString user = m_Cache.getLastUser(m_Greeter.selectUserHint());
+
 	ui->usernameEdit->setText(user);
 	ui->usernameLabel->setText(user);
+
+	if (user.isEmpty())
+	{
+		switchToUsernameEdit();
+	}
 
 	updateUser();
 }
@@ -99,6 +107,7 @@ void AuthForm::authenticationAnswerReady()
 	if (m_Greeter.isAuthenticated())
 	{
 		// @todo update settings
+		m_Cache.setLastUser(ui->usernameLabel->text());
 		m_Greeter.startSessionSync();
 	}
 	else
@@ -113,7 +122,7 @@ void AuthForm::authenticate()
 	m_Greeter.respond(ui->passwordEdit->text().trimmed());
 }
 
-void AuthForm::onPrompt(const QString prompt, const QLightDM::Greeter::PromptType prompType)
+void AuthForm::onPrompt(const QString prompt, const QLightDM::Greeter::PromptType promptType)
 {
 	ui->passwordEdit->clear();
 	ui->passwordEdit->setFocus();

@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x050F00)
+
 include(FindPkgConfig)
 pkg_check_modules(LIGHTDM_QT liblightdm-qt5-3)
 
@@ -27,6 +29,8 @@ set(PROJECT_SOURCES
 	backgroundmanager.cpp
 	backgroundmanager.h
 	wallpaperresize.h
+	cache.cpp
+	cache.h
 )
 
 add_executable(lightdm-dynamic-greeter ${PROJECT_SOURCES})

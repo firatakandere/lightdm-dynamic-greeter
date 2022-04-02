@@ -1,4 +1,3 @@
-#include <QGuiApplication>
 #include <QRect>
 #include <QScreen>
 #include <QImage>
@@ -6,20 +5,41 @@
 #include <QDebug>
 
 #include "mainwindow.h"
-#include "settings.h"
 #include "authform.h"
+#include "wallpaperresize.h"
 
-MainWindow::MainWindow(size_t screen, QWidget *parent)
+MainWindow::MainWindow(QScreen *screen, QWidget *parent)
 	: QWidget{parent},
 	  m_Screen{screen}
 {
 
-	setObjectName(QString("MainWindow_%1").arg(m_Screen));
+	setObjectName(QString("MainWindow_%1").arg(m_Screen->name()));
+}
 
-	QRect screenRect = QGuiApplication::screens().at(screen)->geometry();
+void MainWindow::setBackground(const QImage* backgroundImage, Settings::ResizeMode resizeMode)
+{
+	QPalette palette;
+	QRect rect = m_Screen->geometry();
+
+	if (backgroundImage->isNull())
+	{
+		palette.setColor(QPalette::Window, Qt::black);
+	}
+	else
+	{
+		QBrush brush(WallpaperResize::resize_wallpaper(*backgroundImage, rect.width(), rect.height(), resizeMode));
+		palette.setBrush(backgroundRole(), brush);
+	}
+
+	this->setPalette(palette);
+}
+
+void MainWindow::show(bool isPrimaryScreen)
+{
+	QRect screenRect = m_Screen->geometry();
 	setGeometry(screenRect);
 
-	if (isPrimaryScreen())
+	if (isPrimaryScreen)
 	{
 		auto authForm = new AuthForm(this);
 
@@ -38,27 +58,6 @@ MainWindow::MainWindow(size_t screen, QWidget *parent)
 		int cursor_y = screenRect.height() / 2 + screenRect.y();
 		QCursor::setPos(cursor_x, cursor_y);
 	}
-}
 
-bool MainWindow::isPrimaryScreen() const
-{
-	return QGuiApplication::screens().at(m_Screen) == QGuiApplication::primaryScreen();
-}
-
-void MainWindow::setBackground(const QImage* backgroundImage)
-{
-	QPalette palette;
-	QRect rect = QGuiApplication::screens().at(m_Screen)->geometry();
-
-	if (backgroundImage->isNull())
-	{
-		palette.setColor(QPalette::Window, Qt::black);
-	}
-	else
-	{
-		QBrush brush(backgroundImage->scaled(rect.width(), rect.height(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
-		palette.setBrush(backgroundRole(), brush);
-	}
-
-	this->setPalette(palette);
+	QWidget::show();
 }

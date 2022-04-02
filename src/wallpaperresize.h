@@ -5,11 +5,9 @@
 #include <QPainter>
 #include <QObject>
 
+#include "settings.h"
+
 namespace WallpaperResize {
-
-
-	Q_ENUM(Mode);
-
 	QImage make_scaled(const QImage &image, const int win_w, const int win_h)
 	{
 		return image.scaled(win_w, win_h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -85,16 +83,16 @@ namespace WallpaperResize {
 		return outputImage;
 	}
 
-	QImage make_zoom_fill(const QImage *image, const int win_w, const int win_h)
+	QImage make_zoom_fill(const QImage &image, const int win_w, const int win_h)
 	{
 		int x, y, w, h;
 
-		int img_w = image->width();
-		int img_h = image->height();
+		int img_w = image.width();
+		int img_h = image.height();
 
 		x = 0;
 		w = win_w;
-		h = win_w * (img_h / img_w);
+		h = win_w * (img_h / (float)img_w);
 		y = (h - win_h) / 2;
 
 		if (h < win_h)
@@ -102,18 +100,34 @@ namespace WallpaperResize {
 			y = 0;
 			w = win_h * (img_w / img_h);
 			h = win_h;
-			x = (x - win_w) / 2;
+			x = (w - win_w) / 2;
 		}
 
-		QImage tmpScaledImage = image->scaled(w, h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		QImage tmpScaledImage = image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-		QImage outputImage(win_w, win_h, image->format());
+		QImage outputImage(win_w, win_h, image.format());
 		QPainter painter(&outputImage);
 		painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 		painter.drawImage(0, 0, tmpScaledImage, x, y, win_w, win_h);
 		return outputImage;
 	}
 
+	QImage resize_wallpaper(const QImage &image, const int win_w, const int win_h, const Settings::ResizeMode resizeMode)
+	{
+		switch(resizeMode)
+		{
+		case Settings::ResizeMode::CENTER:
+			return make_center(image, win_w, win_h);
+		case Settings::ResizeMode::ZOOM:
+			return make_zoom(image, win_w, win_h);
+		case Settings::ResizeMode::ZOOM_FILL:
+			return make_zoom_fill(image, win_w, win_h);
+		case Settings::ResizeMode::SCALE:
+		default:
+			return make_scaled(image, win_w, win_h);
+
+		}
+	}
 }
 
 #endif // IMAGESCALE_H

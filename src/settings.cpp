@@ -1,38 +1,54 @@
 #include <QDir>
 #include <QDebug>
+#include <QMetaEnum>
 
 #include "settings.h"
 
-Settings::Settings()
+Settings::Settings(QObject *parent)
+	: QSettings(CONFIG_FILE, QSettings::IniFormat, parent)
 {
-	settings = new QSettings(CONFIG_FILE, QSettings::IniFormat, this);
 }
 
 QString Settings::getCollectionDirectory() const
 {
-	if (!settings->contains("greeter/collection_path"))
+	if (!contains("greeter/collection_path"))
 	{
 		qWarning() << "collection_path setting is missing in configuration file, fallback to default value";
 	}
-	return settings->value("greeter/collection_path", QString("/usr/share/lightdm-dynamic-greeter/wallpapers")).toString();
+	return value("greeter/collection_path", QString("/usr/share/lightdm-dynamic-greeter/wallpapers")).toString();
 }
 
 QString Settings::getChosenWallpapersPath() const
 {
-	if (!settings->contains("greeter/wallpaper"))
+	if (!contains("greeter/wallpaper"))
 	{
 		qWarning() << "wallpaper setting is missing in configuration file, fallback to default value";
 	}
-	QString chosenWallpaper = settings->value("greeter/wallpaper", QString("lakeside")).toString();
+	QString chosenWallpaper = value("greeter/wallpaper", QString("lakeside")).toString();
 	return QDir::cleanPath(getCollectionDirectory() + QDir::separator() + chosenWallpaper);
 }
 
 Settings::ResizeMode Settings::getResizeMode() const
 {
-	if (!settings->contains("greeter/resize_mode"))
+	auto defaultValue = Settings::ResizeMode::SCALE;
+	if (!contains("greeter/resize_mode"))
 	{
 		qWarning() << "resize_mode setting is missing in configuration file, fallback to default value";
+
+		return defaultValue;
 	}
 
-	return settings->value("greeter/resize_mode", QVariant::fromValue(Settings::ResizeMode::SCALE)).value<Settings::ResizeMode>();
+	auto stringValue = value("greeter/resize_mode").toString().toUpper();
+	auto enumMeta = QMetaEnum::fromType<Settings::ResizeMode>();
+	bool ok;
+
+	auto resizingMode = static_cast<Settings::ResizeMode>(enumMeta.keyToValue(qPrintable(stringValue), &ok));
+
+	if (!ok)
+	{
+		qWarning() << "Could not parse value" << stringValue << "for resizing, fallback to default value.";
+		return defaultValue;
+	}
+
+	return resizingMode;
 }

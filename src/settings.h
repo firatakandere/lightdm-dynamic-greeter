@@ -2,13 +2,15 @@
 #define SETTINGS_H
 
 #include <QSettings>
+#include <QObject>
 
 #define CONFIG_FILE "/etc/lightdm/lightdm-dynamic-greeter.conf"
 
-class Settings : public QSettings
+class Settings : QSettings
 {
+	Q_OBJECT
 public:
-	explicit Settings();
+	explicit Settings(QObject *parent = nullptr);
 	[[nodiscard]] QString getChosenWallpapersPath() const;
 
 	enum class ResizeMode {
@@ -22,7 +24,6 @@ public:
 	[[nodiscard]] ResizeMode getResizeMode() const;
 
 private:
-	QSettings* settings;
 	[[nodiscard]] QString getCollectionDirectory() const;
 };
 

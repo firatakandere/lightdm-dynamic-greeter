@@ -2,10 +2,11 @@
 #define AUTHFORM_H
 
 #include <QWidget>
-
 #include <QLightDM/Greeter>
 #include <QLightDM/Power>
 #include <QLightDM/SessionsModel>
+
+#include "cache.h"
 
 namespace Ui {
 class AuthForm;
@@ -37,6 +38,7 @@ private:
 	QLightDM::Greeter m_Greeter;
 	QLightDM::PowerInterface m_PowerInterface;
 	QLightDM::SessionsModel m_SessionsModel;
+	Cache m_Cache;
 };
 
 #endif // AUTHFORM_H

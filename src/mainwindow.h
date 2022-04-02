@@ -2,20 +2,23 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
+#include <QScreen>
 #include <QLightDM/Greeter>
+
+#include "settings.h"
 
 class MainWindow : public QWidget
 {
 	Q_OBJECT
 
 public:
-	MainWindow(size_t screen, QWidget *parent = nullptr);
-	[[nodiscard]] bool isPrimaryScreen() const;
+	MainWindow(QScreen *screen, QWidget *parent = nullptr);
+	void show(bool isPrimaryScreen);
 
 public slots:
-	void setBackground(const QImage *);
+	void setBackground(const QImage *, Settings::ResizeMode);
 
 private:
-	size_t m_Screen;
+	QScreen* m_Screen;
 };
 #endif // MAINWINDOW_H
