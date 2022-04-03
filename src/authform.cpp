@@ -2,6 +2,8 @@
 #include <QLineEdit>
 #include <QCompleter>
 #include <QKeyEvent>
+#include <QPainter>
+#include <QGraphicsOpacityEffect>
 
 #include "authform.h"
 #include "ui_authform.h"
@@ -34,27 +36,35 @@ AuthForm::AuthForm(QWidget *parent) :
     connect(&m_Greeter, &QLightDM::Greeter::showPrompt, this, &AuthForm::onPrompt);
     connect(&m_Greeter, &QLightDM::Greeter::authenticationComplete, this, &AuthForm::authenticationAnswerReady);
 
-    setAutoFillBackground(true);
-    QPalette palette;
-    QColor color = Qt::black;
-    color.setAlpha(200);
-    palette.setColor(QPalette::Window, color);
-    setPalette(palette);
+    setAutoFillBackground(false);
 
+    auto effect = new QGraphicsOpacityEffect(this);
+    effect->setOpacity(0.8);
+    setGraphicsEffect(effect);
+
+    QString user;
     QStringList users;
-    QLightDM::UsersModel usersModel;
-    for(int i = 0; i < usersModel.rowCount(QModelIndex()); ++i)
-    {
-        users << usersModel.data(usersModel.index(i, 0), QLightDM::UsersModel::NameRole).toString();
-    }
 
     if (!m_Greeter.hideUsersHint())
     {
+        QLightDM::UsersModel usersModel;
+        for(int i = 0; i < usersModel.rowCount(QModelIndex()); ++i)
+        {
+            users << usersModel.data(usersModel.index(i, 0), QLightDM::UsersModel::NameRole).toString();
+        }
+
         ui->usernameEdit->setCompleter(new QCompleter(users));
         ui->usernameEdit->completer()->setCompletionMode(QCompleter::InlineCompletion);
     }
 
-    QString user = m_Cache.getLastUser(m_Greeter.selectUserHint());
+    user = m_Cache.getLastUser(m_Greeter.selectUserHint());
+
+    // If there's only 1 user and user hints are enabled
+    // Just use it as user
+    if (users.count() == 1 && user.isEmpty())
+    {
+        user = users.first();
+    }
 
     ui->usernameEdit->setText(user);
     ui->usernameLabel->setText(user);
@@ -123,6 +133,21 @@ void AuthForm::onPrompt(const QString prompt, const QLightDM::Greeter::PromptTyp
 {
     ui->passwordEdit->clear();
     ui->passwordEdit->setFocus();
+}
+
+void AuthForm::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(QBrush(Qt::black));
+    painter.setPen(Qt::transparent);
+
+    QRect rect = this->rect();
+    rect.setWidth(rect.width()-1);
+    rect.setHeight(rect.height()-1);
+    painter.drawRoundedRect(rect, 15, 15);
+
+    QWidget::paintEvent(event);
 }
 
 AuthForm::~AuthForm()

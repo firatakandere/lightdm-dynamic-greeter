@@ -22,6 +22,7 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 private slots:
     void switchToUsernameEdit() const;
@@ -32,7 +33,7 @@ private slots:
 
 private:
     void authenticate();
-    QString currentSession() const;
+    [[nodiscard]] QString currentSession() const;
 
     Ui::AuthForm *ui;
     QLightDM::Greeter m_Greeter;
