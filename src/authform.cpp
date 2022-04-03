@@ -8,127 +8,124 @@
 #include "clickablelabel.h"
 
 AuthForm::AuthForm(QWidget *parent) :
-	QWidget(parent),
-	ui(new Ui::AuthForm),
-	m_Greeter(this),
-	m_PowerInterface(this),
-	m_SessionsModel(this),
-	m_Cache(this)
+    QWidget(parent),
+    ui(new Ui::AuthForm),
+    m_Greeter(this),
+    m_PowerInterface(this),
+    m_SessionsModel(this),
+    m_Cache(this)
 {
-	if (!m_Greeter.connectSync())
-	{
-		close();
-	}
+    if (!m_Greeter.connectSync())
+    {
+        close();
+    }
 
-	ui->setupUi(this);
+    ui->setupUi(this);
 
-	ui->usernameEdit->setPlaceholderText("Username");
-	ui->passwordEdit->setPlaceholderText("Password");
+    ui->usernameEdit->setPlaceholderText("Username");
+    ui->passwordEdit->setPlaceholderText("Password");
 
-	ui->usernameEdit->hide();
-	ui->passwordEdit->setEchoMode(QLineEdit::Password);
+    ui->usernameEdit->hide();
+    ui->passwordEdit->setEchoMode(QLineEdit::Password);
 
-	connect(ui->usernameLabel, &ClickableLabel::clicked, this, &AuthForm::switchToUsernameEdit);
-	connect(ui->usernameEdit, &QLineEdit::textEdited, ui->usernameLabel, &ClickableLabel::setText);
-	connect(ui->usernameEdit, &QLineEdit::editingFinished, this, &AuthForm::updateUser);
-	connect(&m_Greeter, &QLightDM::Greeter::showPrompt, this, &AuthForm::onPrompt);
-	connect(&m_Greeter, &QLightDM::Greeter::authenticationComplete, this, &AuthForm::authenticationAnswerReady);
+    connect(ui->usernameLabel, &ClickableLabel::clicked, this, &AuthForm::switchToUsernameEdit);
+    connect(ui->usernameEdit, &QLineEdit::textEdited, ui->usernameLabel, &ClickableLabel::setText);
+    connect(ui->usernameEdit, &QLineEdit::editingFinished, this, &AuthForm::updateUser);
+    connect(&m_Greeter, &QLightDM::Greeter::showPrompt, this, &AuthForm::onPrompt);
+    connect(&m_Greeter, &QLightDM::Greeter::authenticationComplete, this, &AuthForm::authenticationAnswerReady);
 
-	setAutoFillBackground(true);
-	QPalette palette;
-	QColor color = Qt::black;
-	color.setAlpha(225);
-	palette.setColor(QPalette::Window, color);
-	setPalette(palette);
+    setAutoFillBackground(true);
+    QPalette palette;
+    QColor color = Qt::black;
+    color.setAlpha(200);
+    palette.setColor(QPalette::Window, color);
+    setPalette(palette);
 
-	QStringList users;
-	QLightDM::UsersModel usersModel;
-	for(int i = 0; i < usersModel.rowCount(QModelIndex()); ++i)
-	{
-		users << usersModel.data(usersModel.index(i, 0), QLightDM::UsersModel::NameRole).toString();
-	}
+    QStringList users;
+    QLightDM::UsersModel usersModel;
+    for(int i = 0; i < usersModel.rowCount(QModelIndex()); ++i)
+    {
+        users << usersModel.data(usersModel.index(i, 0), QLightDM::UsersModel::NameRole).toString();
+    }
 
-	if (!m_Greeter.hideUsersHint())
-	{
-		ui->usernameEdit->setCompleter(new QCompleter(users));
-		ui->usernameEdit->completer()->setCompletionMode(QCompleter::InlineCompletion);
-	}
+    if (!m_Greeter.hideUsersHint())
+    {
+        ui->usernameEdit->setCompleter(new QCompleter(users));
+        ui->usernameEdit->completer()->setCompletionMode(QCompleter::InlineCompletion);
+    }
 
-	// @todo remember user
+    QString user = m_Cache.getLastUser(m_Greeter.selectUserHint());
 
-	QString user = m_Cache.getLastUser(m_Greeter.selectUserHint());
+    ui->usernameEdit->setText(user);
+    ui->usernameLabel->setText(user);
 
-	ui->usernameEdit->setText(user);
-	ui->usernameLabel->setText(user);
+    if (user.isEmpty())
+    {
+        switchToUsernameEdit();
+    }
 
-	if (user.isEmpty())
-	{
-		switchToUsernameEdit();
-	}
-
-	updateUser();
+    updateUser();
 }
 
 void AuthForm::switchToUsernameEdit() const
 {
-	ui->usernameLabel->hide();
-	ui->usernameEdit->show();
+    ui->usernameLabel->hide();
+    ui->usernameEdit->show();
 }
 
 void AuthForm::keyPressEvent(QKeyEvent *event)
 {
-	if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
-	{
-		authenticate();
-		return;
-	}
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+    {
+        authenticate();
+        return;
+    }
 
-	QWidget::keyPressEvent(event);
+    QWidget::keyPressEvent(event);
 }
 
 void AuthForm::updateUser()
 {
-	if (m_Greeter.inAuthentication())
-	{
-		m_Greeter.cancelAuthentication();
-	}
-	if (ui->usernameLabel->text().isEmpty() == false)
-	{
-		ui->usernameLabel->show();
-		ui->usernameEdit->hide();
+    if (m_Greeter.inAuthentication())
+    {
+        m_Greeter.cancelAuthentication();
+    }
+    if (ui->usernameLabel->text().isEmpty() == false)
+    {
+        ui->usernameLabel->show();
+        ui->usernameEdit->hide();
 
-		m_Greeter.authenticate(ui->usernameLabel->text());
-		ui->passwordEdit->setFocus();
-	}
+        m_Greeter.authenticate(ui->usernameLabel->text());
+        ui->passwordEdit->setFocus();
+    }
 }
 
 void AuthForm::authenticationAnswerReady()
 {
-	if (m_Greeter.isAuthenticated())
-	{
-		// @todo update settings
-		m_Cache.setLastUser(ui->usernameLabel->text());
-		m_Greeter.startSessionSync();
-	}
-	else
-	{
-		ui->passwordEdit->clear();
-		ui->passwordEdit->setFocus();
-	}
+    if (m_Greeter.isAuthenticated())
+    {
+        m_Cache.setLastUser(ui->usernameLabel->text());
+        m_Greeter.startSessionSync();
+    }
+    else
+    {
+        ui->passwordEdit->clear();
+        ui->passwordEdit->setFocus();
+    }
 }
 
 void AuthForm::authenticate()
 {
-	m_Greeter.respond(ui->passwordEdit->text().trimmed());
+    m_Greeter.respond(ui->passwordEdit->text().trimmed());
 }
 
 void AuthForm::onPrompt(const QString prompt, const QLightDM::Greeter::PromptType promptType)
 {
-	ui->passwordEdit->clear();
-	ui->passwordEdit->setFocus();
+    ui->passwordEdit->clear();
+    ui->passwordEdit->setFocus();
 }
 
 AuthForm::~AuthForm()
 {
-	delete ui;
+    delete ui;
 }

@@ -16,21 +16,21 @@ pkg_check_modules(LIGHTDM_QT liblightdm-qt5-3)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${LIGHTDM_QT_INCLUDE_DIRS})
 
 set(PROJECT_SOURCES
-        main.cpp
-	mainwindow.cpp
-	mainwindow.h
-	settings.cpp
-	settings.h
-	authform.cpp
-	authform.h
-	authform.ui
-	clickablelabel.cpp
-	clickablelabel.h
-	backgroundmanager.cpp
-	backgroundmanager.h
-	wallpaperresize.h
-	cache.cpp
-	cache.h
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
+    settings.cpp
+    settings.h
+    authform.cpp
+    authform.h
+    authform.ui
+    clickablelabel.cpp
+    clickablelabel.h
+    backgroundmanager.cpp
+    backgroundmanager.h
+    wallpaperresize.h
+    cache.cpp
+    cache.h
 )
 
 add_executable(lightdm-dynamic-greeter ${PROJECT_SOURCES})

@@ -8,17 +8,17 @@
 
 class BackgroundManager : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	explicit BackgroundManager(const QString& wallpapersDirectory, QObject *parent = nullptr);
-	void initialize();
+    explicit BackgroundManager(const QString& wallpapersDirectory, QObject *parent = nullptr);
+    void initialize();
 private:
-	QTimer *timer;
-	void resetTimer();
-	QDir m_WallpapersDirectory;
-	void updateBackground();
+    QTimer *timer;
+    void resetTimer();
+    QDir m_WallpapersDirectory;
+    void updateBackground();
 signals:
-	void backgroundUpdated(const QImage*);
+    void backgroundUpdated(const QImage*);
 };
 
 #endif // BACKGROUNDMANAGER_H

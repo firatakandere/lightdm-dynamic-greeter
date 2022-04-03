@@ -8,23 +8,23 @@
 
 class Settings : QSettings
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	explicit Settings(QObject *parent = nullptr);
-	[[nodiscard]] QString getChosenWallpapersPath() const;
+    explicit Settings(QObject *parent = nullptr);
+    [[nodiscard]] QString getChosenWallpapersPath() const;
 
-	enum class ResizeMode {
-		SCALE,
-		CENTER,
-		ZOOM,
-		ZOOM_FILL
-	};
-	Q_ENUM(ResizeMode);
+    enum class ResizeMode {
+        SCALE,
+        CENTER,
+        ZOOM,
+        ZOOM_FILL
+    };
+    Q_ENUM(ResizeMode);
 
-	[[nodiscard]] ResizeMode getResizeMode() const;
+    [[nodiscard]] ResizeMode getResizeMode() const;
 
 private:
-	[[nodiscard]] QString getCollectionDirectory() const;
+    [[nodiscard]] QString getCollectionDirectory() const;
 };
 
 #endif // SETTINGS_H

@@ -8,11 +8,11 @@
 
 class Cache : QSettings
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	explicit Cache(QObject *parent = nullptr);
-	[[nodiscard]] QString getLastUser(const QString& defaultValue) const;
-	void setLastUser(const QString&);
+    explicit Cache(QObject *parent = nullptr);
+    [[nodiscard]] QString getLastUser(const QString& defaultValue) const;
+    void setLastUser(const QString&);
 };
 
 #endif // CACHE_H
