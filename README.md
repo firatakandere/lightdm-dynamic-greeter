@@ -7,10 +7,10 @@ A QT-based LightDM Greeter that changes background based on time.
 - Wallpaper resizing modes (scaled, zoomed, zoom_filled, centered).
 - Remembers last logged in username.
 - Supports multipe screens.
+- Setting background color (for zoomed and centered)
 
 ### Missing Functionality
 - Session selection
-- Setting background color (for zoomed and centered)
 - Guest account
 - Power controls
 - Settings UI

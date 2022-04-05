@@ -13,7 +13,7 @@ namespace WallpaperResize {
         return image.scaled(win_w, win_h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     }
 
-    QImage make_center(const QImage &image, const int win_w, const int win_h)
+    QImage make_center(const QImage &image, const QColor& bgColor, const int win_w, const int win_h)
     {
         int dest_x = (win_w - image.width()) >> 1;
         int dest_y = (win_h - image.height()) >> 1;
@@ -37,13 +37,14 @@ namespace WallpaperResize {
         }
 
         QImage outputImage(win_w, win_h, image.format());
+        outputImage.fill(bgColor);
         QPainter painter(&outputImage);
         painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
         painter.drawImage(dest_x, dest_y, image, src_x, src_y, cpy_w, cpy_h);
         return outputImage;
     }
 
-    QImage make_zoom(const QImage &image, const int win_w, const int win_h)
+    QImage make_zoom(const QImage &image, const QColor& bgColor, const int win_w, const int win_h)
     {
         int x, y, res_x, res_y;
 
@@ -77,6 +78,7 @@ namespace WallpaperResize {
         QImage tmpScaledImage = image.scaled(res_x, res_y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
         QImage outputImage(win_w, win_h, image.format());
+        outputImage.fill(bgColor);
         QPainter painter(&outputImage);
         painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
         painter.drawImage(x, y, tmpScaledImage, 0, 0, tmpScaledImage.width(), tmpScaledImage.height());
@@ -104,7 +106,6 @@ namespace WallpaperResize {
         }
 
         QImage tmpScaledImage = image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
         QImage outputImage(win_w, win_h, image.format());
         QPainter painter(&outputImage);
         painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
@@ -112,14 +113,14 @@ namespace WallpaperResize {
         return outputImage;
     }
 
-    QImage resize_wallpaper(const QImage &image, const int win_w, const int win_h, const Settings::ResizeMode resizeMode)
+    QImage resize_wallpaper(const QImage &image, const QColor& bgColor, const int win_w, const int win_h, const Settings::ResizeMode resizeMode)
     {
         switch(resizeMode)
         {
         case Settings::ResizeMode::CENTER:
-            return make_center(image, win_w, win_h);
+            return make_center(image, bgColor, win_w, win_h);
         case Settings::ResizeMode::ZOOM:
-            return make_zoom(image, win_w, win_h);
+            return make_zoom(image, bgColor, win_w, win_h);
         case Settings::ResizeMode::ZOOM_FILL:
             return make_zoom_fill(image, win_w, win_h);
         case Settings::ResizeMode::SCALE:

@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 
     BackgroundManager backgroundManager(settings.getChosenWallpapersPath());
     Settings::ResizeMode resizeMode = settings.getResizeMode();
+    QColor backgroundColor = settings.getBackgroundColor();
 
     for (auto screen : a.screens())
     {
@@ -58,8 +59,9 @@ int main(int argc, char *argv[])
         {
             mainWindow->show(false);
         }
-        QObject::connect(&backgroundManager, &BackgroundManager::backgroundUpdated, [mainWindow, resizeMode](const QImage* image){
-            mainWindow->setBackground(image, resizeMode);
+
+        QObject::connect(&backgroundManager, &BackgroundManager::backgroundUpdated, [mainWindow, resizeMode, backgroundColor](const QImage* image){
+            mainWindow->setBackground(image, resizeMode, backgroundColor);
         });
     }
 

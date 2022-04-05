@@ -3,6 +3,7 @@
 
 #include <QSettings>
 #include <QObject>
+#include <QColor>
 
 #define CONFIG_FILE "/etc/lightdm/lightdm-dynamic-greeter.conf"
 
@@ -22,6 +23,8 @@ public:
     Q_ENUM(ResizeMode);
 
     [[nodiscard]] ResizeMode getResizeMode() const;
+
+    [[nodiscard]] QColor getBackgroundColor() const;
 
 private:
     [[nodiscard]] QString getCollectionDirectory() const;

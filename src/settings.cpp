@@ -52,3 +52,13 @@ Settings::ResizeMode Settings::getResizeMode() const
 
     return resizingMode;
 }
+
+QColor Settings::getBackgroundColor() const
+{
+    if(!contains("greeter/background_color"))
+    {
+        qWarning() << "background_color is missing in configuration file, fallback to default value";
+    }
+
+    return value("greeter/background_color", "#FFFFFF").toString();
+}

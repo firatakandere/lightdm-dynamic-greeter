@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QScreen>
 #include <QLightDM/Greeter>
+#include <QColor>
 
 #include "settings.h"
 
@@ -16,7 +17,7 @@ public:
     void show(bool isPrimaryScreen);
 
 public slots:
-    void setBackground(const QImage *, Settings::ResizeMode);
+    void setBackground(const QImage *,const Settings::ResizeMode, const QColor& bgColor);
 
 private:
     QScreen* m_Screen;

@@ -16,18 +16,18 @@ MainWindow::MainWindow(QScreen *screen, QWidget *parent)
     setObjectName(QString("MainWindow_%1").arg(m_Screen->name()));
 }
 
-void MainWindow::setBackground(const QImage* backgroundImage, Settings::ResizeMode resizeMode)
+void MainWindow::setBackground(const QImage* backgroundImage, const Settings::ResizeMode resizeMode, const QColor& bgColor)
 {
     QPalette palette;
     QRect rect = m_Screen->geometry();
 
     if (backgroundImage->isNull())
     {
-        palette.setColor(QPalette::Window, Qt::black);
+        palette.setColor(QPalette::Window, bgColor);
     }
     else
     {
-        QBrush brush(WallpaperResize::resize_wallpaper(*backgroundImage, rect.width(), rect.height(), resizeMode));
+        QBrush brush(WallpaperResize::resize_wallpaper(*backgroundImage, bgColor, rect.width(), rect.height(), resizeMode));
         palette.setBrush(backgroundRole(), brush);
     }
 
