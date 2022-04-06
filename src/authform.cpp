@@ -13,7 +13,6 @@ AuthForm::AuthForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AuthForm),
     m_Greeter(this),
-    m_PowerInterface(this),
     m_SessionsModel(this),
     m_Cache(this)
 {

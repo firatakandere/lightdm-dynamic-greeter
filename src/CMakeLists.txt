@@ -33,6 +33,8 @@ set(PROJECT_SOURCES
     cache.h
     screenmanager.cpp
     screenmanager.h
+    powercontrols.cpp
+    powercontrols.h
 )
 
 add_executable(lightdm-dynamic-greeter ${PROJECT_SOURCES})

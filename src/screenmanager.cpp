@@ -42,7 +42,7 @@ void ScreenManager::onPrimaryScreenChanged(QScreen *screen)
 
     if (screenWindowMap.contains(currentPrimaryScreen))
     {
-        screenWindowMap.value(currentPrimaryScreen)->undrawAuthForm();
+        screenWindowMap.value(currentPrimaryScreen)->undrawPrimaryScreenElements();
     }
 
     if (!screenWindowMap.contains(screen))
@@ -50,7 +50,7 @@ void ScreenManager::onPrimaryScreenChanged(QScreen *screen)
         addScreen(screen);
     }
 
-    screenWindowMap.value(screen)->drawAuthForm();
+    screenWindowMap.value(screen)->drawPrimaryScreenElements();
     currentPrimaryScreen = screen;
 }
 
@@ -63,7 +63,7 @@ void ScreenManager::addScreen(QScreen *screen)
     {
         mainWindow->setFocus();
         mainWindow->activateWindow();
-        mainWindow->drawAuthForm();
+        mainWindow->drawPrimaryScreenElements();
 
         currentPrimaryScreen = screen;
     }

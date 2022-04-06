@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QLightDM/Greeter>
-#include <QLightDM/Power>
 #include <QLightDM/SessionsModel>
 
 #include "cache.h"
@@ -37,7 +36,6 @@ private:
 
     Ui::AuthForm *ui;
     QLightDM::Greeter m_Greeter;
-    QLightDM::PowerInterface m_PowerInterface;
     QLightDM::SessionsModel m_SessionsModel;
     Cache m_Cache;
 };

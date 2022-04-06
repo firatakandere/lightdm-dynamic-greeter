@@ -6,6 +6,7 @@
 
 #include "mainwindow.h"
 #include "wallpaperresize.h"
+#include "powercontrols.h"
 
 MainWindow::MainWindow(const QScreen *screen, QWidget *parent)
     : QWidget{parent},
@@ -61,8 +62,36 @@ void MainWindow::undrawAuthForm()
     delete m_AuthForm;
 }
 
+void MainWindow::drawPowerControls()
+{
+    QRect screenRect = m_Screen->geometry();    void drawPrimaryScreenElements();
+    void undrawPrimaryScreenElements();
+    m_PowerControls= new PowerControls(this);
+    m_PowerControls->show();
+    int power_x = screenRect.width() - m_PowerControls->width();
+    int power_y = screenRect.height() - m_PowerControls->height();
+    m_PowerControls->move(power_x, power_y);
+}
+
+void MainWindow::undrawPowerControls()
+{
+    delete m_PowerControls;
+}
+
+void MainWindow::drawPrimaryScreenElements()
+{
+    drawAuthForm();
+    drawPowerControls();
+}
+
+void MainWindow::undrawPrimaryScreenElements()
+{
+    undrawAuthForm();
+    undrawPowerControls();
+}
+
 MainWindow::~MainWindow()
 {
     delete m_AuthForm;
-    delete m_Screen;
+    delete m_PowerControls;
 }

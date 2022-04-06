@@ -8,6 +8,7 @@
 
 #include "settings.h"
 #include "authform.h"
+#include "powercontrols.h"
 
 class MainWindow : public QWidget
 {
@@ -16,14 +17,21 @@ class MainWindow : public QWidget
 public:
     MainWindow(const QScreen *screen, QWidget *parent = nullptr);
     ~MainWindow() override;
-    void drawAuthForm();
-    void undrawAuthForm();
+    void drawPrimaryScreenElements();
+    void undrawPrimaryScreenElements();
 
 public slots:
     void setBackground(const QImage *,const Settings::ResizeMode, const QColor& bgColor);
 
 private:
+    void drawAuthForm();
+    void undrawAuthForm();
+
+    void drawPowerControls();
+    void undrawPowerControls();
+
     const QScreen* m_Screen;
     AuthForm* m_AuthForm;
+    PowerControls* m_PowerControls;
 };
 #endif // MAINWINDOW_H
