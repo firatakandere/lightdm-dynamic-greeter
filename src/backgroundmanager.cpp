@@ -56,7 +56,6 @@ void BackgroundManager::updateBackground()
     emit backgroundUpdated(image);
 }
 
-
 void BackgroundManager::initialize()
 {
     if (!m_WallpapersDirectory.exists())
@@ -67,4 +66,9 @@ void BackgroundManager::initialize()
 
     updateBackground();
     resetTimer();
+}
+
+BackgroundManager::~BackgroundManager()
+{
+    delete timer;
 }

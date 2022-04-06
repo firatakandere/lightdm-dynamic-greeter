@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
     wallpaperresize.h
     cache.cpp
     cache.h
+    screenmanager.cpp
+    screenmanager.h
 )
 
 add_executable(lightdm-dynamic-greeter ${PROJECT_SOURCES})

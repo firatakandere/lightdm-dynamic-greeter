@@ -1,8 +1,10 @@
 #include <QApplication>
+#include <QHash>
+#include <QScreen>
 
-#include "mainwindow.h"
 #include "backgroundmanager.h"
 #include "settings.h"
+#include "screenmanager.h"
 
 // qDebug does not output to console anymore
 void customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -41,30 +43,12 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     Settings settings;
+    auto backgroundManager = new BackgroundManager(settings.getChosenWallpapersPath());
+    auto screenManager = new ScreenManager(backgroundManager, settings);
 
-    BackgroundManager backgroundManager(settings.getChosenWallpapersPath());
-    Settings::ResizeMode resizeMode = settings.getResizeMode();
-    QColor backgroundColor = settings.getBackgroundColor();
+    QObject::connect(&a, &QApplication::screenAdded, screenManager, &ScreenManager::onScreenAdded);
+    QObject::connect(&a, &QApplication::screenRemoved, screenManager, &ScreenManager::onScreenRemoved);
+    QObject::connect(&a, &QApplication::primaryScreenChanged, screenManager, &ScreenManager::onPrimaryScreenChanged);
 
-    for (auto screen : a.screens())
-    {
-        auto mainWindow = new MainWindow(screen);
-        if (screen == a.primaryScreen())
-        {
-            mainWindow->setFocus();
-            mainWindow->activateWindow();
-            mainWindow->show(true);
-        }
-        else
-        {
-            mainWindow->show(false);
-        }
-
-        QObject::connect(&backgroundManager, &BackgroundManager::backgroundUpdated, [mainWindow, resizeMode, backgroundColor](const QImage* image){
-            mainWindow->setBackground(image, resizeMode, backgroundColor);
-        });
-    }
-
-    backgroundManager.initialize();
     return a.exec();
 }

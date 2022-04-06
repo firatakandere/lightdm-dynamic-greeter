@@ -12,11 +12,12 @@ class BackgroundManager : public QObject
 public:
     explicit BackgroundManager(const QString& wallpapersDirectory, QObject *parent = nullptr);
     void initialize();
+    void updateBackground();
+    ~BackgroundManager() override;
 private:
     QTimer *timer;
     void resetTimer();
     QDir m_WallpapersDirectory;
-    void updateBackground();
 signals:
     void backgroundUpdated(const QImage*);
 };

@@ -7,19 +7,23 @@
 #include <QColor>
 
 #include "settings.h"
+#include "authform.h"
 
 class MainWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QScreen *screen, QWidget *parent = nullptr);
-    void show(bool isPrimaryScreen);
+    MainWindow(const QScreen *screen, QWidget *parent = nullptr);
+    ~MainWindow() override;
+    void drawAuthForm();
+    void undrawAuthForm();
 
 public slots:
     void setBackground(const QImage *,const Settings::ResizeMode, const QColor& bgColor);
 
 private:
-    QScreen* m_Screen;
+    const QScreen* m_Screen;
+    AuthForm* m_AuthForm;
 };
 #endif // MAINWINDOW_H

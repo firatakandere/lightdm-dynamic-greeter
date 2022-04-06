@@ -5,8 +5,6 @@
 #include <QObject>
 #include <QColor>
 
-#define CONFIG_FILE "/etc/lightdm/lightdm-dynamic-greeter.conf"
-
 class Settings : QSettings
 {
     Q_OBJECT

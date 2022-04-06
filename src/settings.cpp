@@ -4,6 +4,8 @@
 
 #include "settings.h"
 
+#define CONFIG_FILE "/etc/lightdm/lightdm-dynamic-greeter.conf"
+
 Settings::Settings(QObject *parent)
     : QSettings(CONFIG_FILE, QSettings::IniFormat, parent)
 {

@@ -8,13 +8,13 @@ A QT-based LightDM Greeter that changes background based on time.
 - Remembers last logged in username.
 - Supports multipe screens.
 - Setting background color (for zoomed and centered)
+- Monitor/screen change detection
 
 ### Missing Functionality
 - Session selection
 - Guest account
 - Power controls
 - Settings UI
-- Monitor/screen change detection
 - Custom offsets for auth form.
 
 ### Build & Installation
@@ -40,7 +40,7 @@ Desired wallpaper's folder name should be used to set `wallpaper` parameter in c
 ##### File Structure
 - Each wallpaper folder should include 24 files.
 - Each file should be named with an integer from 0 to 23 (no zero-padding), where the number represents the hour-clock that the file is displayed.
-- If there are not 24 files, symbolic lcinks from other files can be used to save space instead of duplicating files.
+- If there are not 24 files, symbolic links from other files can be used to save space instead of duplicating files.
 
 
 ##### Supported Formats
