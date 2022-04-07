@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>power.svg</file>
+    </qresource>
+</RCC>

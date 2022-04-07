@@ -37,6 +37,6 @@ set(PROJECT_SOURCES
     powercontrols.h
 )
 
-add_executable(lightdm-dynamic-greeter ${PROJECT_SOURCES})
+add_executable(lightdm-dynamic-greeter ${PROJECT_SOURCES} resources/resources.qrc)
 
 target_link_libraries(lightdm-dynamic-greeter PRIVATE lightdm-qt5-3 Qt${QT_VERSION_MAJOR}::Widgets)

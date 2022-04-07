@@ -3,6 +3,8 @@
 #include <QImage>
 #include <QSettings>
 #include <QDebug>
+#include <QPushButton>
+#include <QIcon>
 
 #include "mainwindow.h"
 #include "wallpaperresize.h"
@@ -64,13 +66,28 @@ void MainWindow::undrawAuthForm()
 
 void MainWindow::drawPowerControls()
 {
-    QRect screenRect = m_Screen->geometry();    void drawPrimaryScreenElements();
-    void undrawPrimaryScreenElements();
-    m_PowerControls= new PowerControls(this);
-    m_PowerControls->show();
-    int power_x = screenRect.width() - m_PowerControls->width();
-    int power_y = screenRect.height() - m_PowerControls->height();
-    m_PowerControls->move(power_x, power_y);
+    m_PowerControls = new PowerControls(this);
+    QRect screenRect = m_Screen->geometry();
+
+    auto powerButton = new QPushButton(this);
+    powerButton->setIcon(QIcon(":/icons/power.svg"));
+    powerButton->setIconSize(QSize(65, 65));
+    powerButton->setStyleSheet("background-color: transparent; border: 0px");
+    powerButton->adjustSize();
+
+    int power_x = screenRect.width() - powerButton->width();
+    int power_y = screenRect.height() - powerButton->height();
+
+    powerButton->move(power_x, power_y);
+
+    m_PowerControls->adjustSize();
+    int controls_x = screenRect.width() - m_PowerControls->width();
+    int controls_y = power_y - m_PowerControls->height();
+
+
+    m_PowerControls->move(controls_x, controls_y);
+
+    connect(powerButton, &QPushButton::clicked, m_PowerControls, &QWidget::show);
 }
 
 void MainWindow::undrawPowerControls()
@@ -94,4 +111,14 @@ MainWindow::~MainWindow()
 {
     delete m_AuthForm;
     delete m_PowerControls;
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (!m_PowerControls->underMouse())
+    {
+        m_PowerControls->hide();
+    }
+
+    QWidget::mousePressEvent(event);
 }

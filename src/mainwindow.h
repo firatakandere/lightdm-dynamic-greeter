@@ -23,6 +23,9 @@ public:
 public slots:
     void setBackground(const QImage *,const Settings::ResizeMode, const QColor& bgColor);
 
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+
 private:
     void drawAuthForm();
     void undrawAuthForm();
