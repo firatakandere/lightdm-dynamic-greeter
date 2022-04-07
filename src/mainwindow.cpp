@@ -84,7 +84,6 @@ void MainWindow::drawPowerControls()
     int controls_x = screenRect.width() - m_PowerControls->width();
     int controls_y = power_y - m_PowerControls->height();
 
-
     m_PowerControls->move(controls_x, controls_y);
 
     connect(powerButton, &QPushButton::clicked, m_PowerControls, &QWidget::show);
@@ -97,6 +96,7 @@ void MainWindow::undrawPowerControls()
 
 void MainWindow::drawPrimaryScreenElements()
 {
+
     drawAuthForm();
     drawPowerControls();
 }

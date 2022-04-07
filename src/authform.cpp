@@ -118,6 +118,7 @@ void AuthForm::authenticationAnswerReady()
     }
     else
     {
+        updateUser();
         ui->passwordEdit->clear();
         ui->passwordEdit->setFocus();
     }
